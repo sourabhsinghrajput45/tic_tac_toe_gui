@@ -2,15 +2,21 @@ import tkinter as tk
 from tkinter import messagebox
 from features.timer_feature import GameTimer
 from features.scoreboard_feature import Scoreboard
+from features.theme_feature import ThemeManager
 
 
 class TicTacToe:
     def __init__(self, root):
         self.root = root
         self.root.title("Tic Tac Toe 🎮")
-        self.root.geometry("600x700")
+
+        # ✅ Make window full screen
+        self.root.attributes("-fullscreen", True)
+
+        # (Optional) If you prefer a maximized but resizable window instead of true full screen:
+        # self.root.state('zoomed')
+
         self.root.configure(bg="#1b1b2f")
-        self.root.resizable(False, False)
 
         self.current_player = "X"
         self.buttons = [[None for _ in range(3)] for _ in range(3)]
@@ -64,9 +70,31 @@ class TicTacToe:
         )
         self.reset_button.pack(pady=20)
 
+        # --- Theme Button ---
+        self.theme_button = tk.Button(
+            root, text="Change Theme 🎨", font=("Poppins", 12, "bold"),
+            bg="#00ADB5", fg="#1b1b2f", relief="flat",
+            width=15, height=1, command=self.toggle_theme
+        )
+        self.theme_button.pack(pady=(0, 10))
+
         # --- Footer ---
-        tk.Label(root, text="Made with ❤️ by Sourabh",
-                 font=("Poppins", 10), fg="#888", bg="#1b1b2f").pack(pady=(10, 10))
+        self.footer_label = tk.Label(
+            root, text="Made with ❤️ by Sourabh",
+            font=("Poppins", 10), fg="#888", bg="#1b1b2f"
+        )
+        self.footer_label.pack(pady=(10, 10))
+
+        # --- Theme Manager ---
+        self.theme_manager = ThemeManager(self)
+        self.theme_manager.apply_theme("dark")
+
+        # --- Add Esc key to exit fullscreen ---
+        self.root.bind("<Escape>", self.exit_fullscreen)
+
+    # --- Exit fullscreen when pressing Esc ---
+    def exit_fullscreen(self, event=None):
+        self.root.attributes("-fullscreen", False)
 
     # --- Button Click Logic ---
     def on_click(self, row, col):
@@ -113,7 +141,6 @@ class TicTacToe:
     def is_draw(self):
         return all(button["text"] != "" for row in self.buttons for button in row)
 
-    # --- UI Enhancements ---
     def highlight_winner(self):
         for (r, c) in self.winning_cells:
             self.buttons[r][c].config(bg="#32E0C4", fg="#222831")
@@ -133,7 +160,9 @@ class TicTacToe:
         self.timer.reset()
         self.timer.start(self.root)
 
-    # --- Custom Popup Window ---
+    def toggle_theme(self):
+        self.theme_manager.toggle_theme()
+
     def show_popup(self, message):
         popup = tk.Toplevel(self.root)
         popup.title("Game Over")
