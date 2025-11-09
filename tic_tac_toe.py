@@ -1,83 +1,93 @@
 import tkinter as tk
 from tkinter import messagebox
 from features.timer_feature import GameTimer
+from features.scoreboard_feature import Scoreboard
+
 
 class TicTacToe:
     def __init__(self, root):
         self.root = root
         self.root.title("Tic Tac Toe 🎮")
-        self.root.geometry("340x440")
+        self.root.geometry("600x700")
         self.root.configure(bg="#1b1b2f")
         self.root.resizable(False, False)
 
         self.current_player = "X"
         self.buttons = [[None for _ in range(3)] for _ in range(3)]
 
-        # --- Title & status label ---
+        # --- Title ---
         self.title_label = tk.Label(
-            root, text="Tic Tac Toe", font=("Poppins", 20, "bold"),
+            root, text="Tic Tac Toe", font=("Poppins", 26, "bold"),
             fg="#00ADB5", bg="#1b1b2f"
         )
-        self.title_label.pack(pady=(10, 0))
+        self.title_label.pack(pady=(15, 0))
 
+        # --- Player Turn Label ---
         self.label = tk.Label(
             root, text=f"Player {self.current_player}'s Turn",
             font=("Poppins", 14, "bold"), fg="#EEEEEE", bg="#1b1b2f"
         )
-        self.label.pack(pady=(5, 5))
+        self.label.pack(pady=(5, 10))
 
-        # --- Game Timer + Move Counter ---
+        # --- Timer + Move Counter ---
         self.timer = GameTimer(root)
         self.timer.start(root)
 
-        # --- Main frame ---
+        # --- Scoreboard ---
+        self.scoreboard = Scoreboard(root)
+
+        # --- Game Board Frame ---
         self.frame = tk.Frame(root, bg="#1b1b2f")
-        self.frame.pack()
+        self.frame.pack(pady=20)
 
         for row in range(3):
             for col in range(3):
                 btn = tk.Button(
-                    self.frame, text="", font=("Poppins", 22, "bold"),
-                    width=5, height=2, bg="#393E46", fg="#EEEEEE",
+                    self.frame, text="", font=("Poppins", 24, "bold"),
+                    width=6, height=2, bg="#393E46", fg="#EEEEEE",
                     activebackground="#00ADB5", activeforeground="#222831",
                     bd=0, relief="flat",
                     command=lambda r=row, c=col: self.on_click(r, c)
                 )
-                btn.grid(row=row, column=col, padx=5, pady=5)
+                btn.grid(row=row, column=col, padx=10, pady=10)
                 # Add hover effect
                 btn.bind("<Enter>", lambda e, b=btn: b.config(bg="#00ADB5"))
                 btn.bind("<Leave>", lambda e, b=btn:
                          b.config(bg="#393E46") if b["state"] == "normal" and b["text"] == "" else None)
                 self.buttons[row][col] = btn
 
-        # --- Restart button ---
+        # --- Restart Button ---
         self.reset_button = tk.Button(
-            root, text="Restart Game", font=("Poppins", 12, "bold"),
+            root, text="Restart Game", font=("Poppins", 13, "bold"),
             bg="#00ADB5", fg="#1b1b2f", relief="flat",
-            width=15, height=1, command=self.reset_board
+            width=18, height=2, command=self.reset_board
         )
-        self.reset_button.pack(pady=15)
+        self.reset_button.pack(pady=20)
 
         # --- Footer ---
         tk.Label(root, text="Made with ❤️ by Sourabh",
-                 font=("Poppins", 9), fg="#555", bg="#1b1b2f").pack(pady=(0, 5))
+                 font=("Poppins", 10), fg="#888", bg="#1b1b2f").pack(pady=(10, 10))
 
     # --- Button Click Logic ---
     def on_click(self, row, col):
         button = self.buttons[row][col]
         if button["text"] == "":
-            # Increment move count
             self.timer.increment_move()
 
             button["text"] = self.current_player
             button["fg"] = "#FFD369" if self.current_player == "X" else "#FF2E63"
+
             if self.check_winner():
                 self.timer.stop()
                 self.highlight_winner()
+                self.scoreboard.update_score(self.current_player)
                 self.show_popup(f"🏆 Player {self.current_player} Wins!")
+
             elif self.is_draw():
                 self.timer.stop()
+                self.scoreboard.update_score("draw")
                 self.show_popup("😐 It's a Draw!")
+
             else:
                 self.current_player = "O" if self.current_player == "X" else "X"
                 self.label.config(text=f"Player {self.current_player}'s Turn")
@@ -120,7 +130,6 @@ class TicTacToe:
         for row in self.buttons:
             for button in row:
                 button.config(text="", state="normal", bg="#393E46", fg="#EEEEEE")
-        # Reset timer and move count
         self.timer.reset()
         self.timer.start(self.root)
 
@@ -128,22 +137,24 @@ class TicTacToe:
     def show_popup(self, message):
         popup = tk.Toplevel(self.root)
         popup.title("Game Over")
-        popup.geometry("250x150")
+        popup.geometry("300x180")
         popup.configure(bg="#1b1b2f")
         popup.resizable(False, False)
-        tk.Label(popup, text=message, font=("Poppins", 14, "bold"),
-                 fg="#00ADB5", bg="#1b1b2f").pack(pady=20)
+        tk.Label(popup, text=message, font=("Poppins", 15, "bold"),
+                 fg="#00ADB5", bg="#1b1b2f").pack(pady=25)
         tk.Button(popup, text="Play Again", bg="#00ADB5", fg="#1b1b2f",
-                  font=("Poppins", 11, "bold"), width=12, relief="flat",
+                  font=("Poppins", 12, "bold"), width=14, relief="flat",
                   command=lambda: [self.reset_board(), popup.destroy()]).pack(pady=10)
         popup.transient(self.root)
         popup.grab_set()
         popup.wait_window()
 
+
 def main():
     root = tk.Tk()
     game = TicTacToe(root)
     root.mainloop()
+
 
 if __name__ == "__main__":
     main()
