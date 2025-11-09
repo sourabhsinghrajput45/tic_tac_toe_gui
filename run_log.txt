@@ -1,0 +1,21 @@
+Running Tic Tac Toe script...
+Launching Tic Tac Toe...
+Done.
+[2025-11-05 23:56:49] ---------------------------------------------
+[2025-11-05 23:56:49] Project path: D:\GammaEdge Tranning\Assignment 1\UV Project\tic_tac_toe_gui
+[2025-11-05 23:56:49] Python detected: Python 3.13.7
+[2025-11-05 23:56:49] uv ready.
+[2025-11-05 23:56:49] Running 'uv sync'...
+[2025-11-05 23:56:50] Dependencies synced successfully.
+[2025-11-05 23:56:50] Launching Tic-Tac-Toe...
+[2025-11-05 23:56:52] Game closed normally.
+[2025-11-05 23:56:52] Script finished.
+[2025-11-05 23:58:53] ---------------------------------------------
+[2025-11-05 23:58:53] Project path: D:\GammaEdge Tranning\Assignment 1\UV Project\tic_tac_toe_gui
+[2025-11-05 23:58:54] Python detected: Python 3.13.7
+[2025-11-05 23:58:54] uv ready.
+[2025-11-05 23:58:54] Running 'uv sync'...
+[2025-11-05 23:58:54] Dependencies synced successfully.
+[2025-11-05 23:58:54] Launching Tic-Tac-Toe...
+[2025-11-05 23:59:29] Game closed normally.
+[2025-11-05 23:59:29] Script finished.

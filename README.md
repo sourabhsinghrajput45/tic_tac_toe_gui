@@ -1,2 +1,2 @@
 # tic_tac_toe_gui
- A basic gui based tic tac toe game created using python
+A basic GUI-based Tic Tac Toe game created using Python

@@ -1,0 +1,12 @@
+[project]
+name = "tic-tac-toe-gui"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "rich>=14.2.0",
+]
+
+[project.scripts]
+tic-tac-toe = "tic_tac_toe:main"
