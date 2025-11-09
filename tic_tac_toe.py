@@ -1,11 +1,12 @@
 import tkinter as tk
 from tkinter import messagebox
+from features.timer_feature import GameTimer
 
 class TicTacToe:
     def __init__(self, root):
         self.root = root
         self.root.title("Tic Tac Toe 🎮")
-        self.root.geometry("340x400")
+        self.root.geometry("340x440")
         self.root.configure(bg="#1b1b2f")
         self.root.resizable(False, False)
 
@@ -23,7 +24,11 @@ class TicTacToe:
             root, text=f"Player {self.current_player}'s Turn",
             font=("Poppins", 14, "bold"), fg="#EEEEEE", bg="#1b1b2f"
         )
-        self.label.pack(pady=(5, 15))
+        self.label.pack(pady=(5, 5))
+
+        # --- Game Timer + Move Counter ---
+        self.timer = GameTimer(root)
+        self.timer.start(root)
 
         # --- Main frame ---
         self.frame = tk.Frame(root, bg="#1b1b2f")
@@ -61,12 +66,17 @@ class TicTacToe:
     def on_click(self, row, col):
         button = self.buttons[row][col]
         if button["text"] == "":
+            # Increment move count
+            self.timer.increment_move()
+
             button["text"] = self.current_player
             button["fg"] = "#FFD369" if self.current_player == "X" else "#FF2E63"
             if self.check_winner():
+                self.timer.stop()
                 self.highlight_winner()
                 self.show_popup(f"🏆 Player {self.current_player} Wins!")
             elif self.is_draw():
+                self.timer.stop()
                 self.show_popup("😐 It's a Draw!")
             else:
                 self.current_player = "O" if self.current_player == "X" else "X"
@@ -110,6 +120,9 @@ class TicTacToe:
         for row in self.buttons:
             for button in row:
                 button.config(text="", state="normal", bg="#393E46", fg="#EEEEEE")
+        # Reset timer and move count
+        self.timer.reset()
+        self.timer.start(self.root)
 
     # --- Custom Popup Window ---
     def show_popup(self, message):
