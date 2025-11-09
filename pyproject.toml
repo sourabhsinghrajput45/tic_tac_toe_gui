@@ -10,3 +10,8 @@ dependencies = [
 
 [project.scripts]
 tic-tac-toe = "tic_tac_toe:main"
+
+[dependency-groups]
+dev = [
+    "pre-commit>=4.4.0",
+]
